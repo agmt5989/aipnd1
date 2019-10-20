@@ -119,9 +119,13 @@ def main():
     
     # TODO 0: Computes overall runtime in seconds & prints it in hh:mm:ss format
     tot_time = end_time - start_time
-    print("\n** Total Elapsed Runtime:",
-          str(int((tot_time/3600)))+":"+str(int((tot_time%3600)/60))+":"
-          +str(int((tot_time%3600)%60)) )
+    # print("\n** Total Elapsed Runtime:",
+    #       str(int((tot_time/3600)))+":"+str(int((tot_time%3600)/60))+":"
+    #       +str(int((tot_time%3600)%60)) )
+    # 
+    # Reinventing my print format
+    print("\n** Total Elapsed Runtime: {}:{}:{}".format(int(tot_time//3600),
+         int((tot_time%3600)//60), int((tot_time%3600)%60)))
     
 
 # Call to main function to run the program
