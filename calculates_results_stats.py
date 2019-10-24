@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/calculates_results_stats.py
-#                                                                             
-# PROGRAMMER:
-# DATE CREATED:                                  
+#
+# PROGRAMMER: Mike Ajala
+# DATE CREATED: 10/23/2019
 # REVISED DATE: 
 # PURPOSE: Create a function calculates_results_stats that calculates the 
 #          statistics of the results of the programrun using the classifier's model 
@@ -70,4 +70,34 @@ def calculates_results_stats(results_dic):
     """        
     # Replace None with the results_stats_dic dictionary that you created with 
     # this function 
-    return None
+    r = {}
+
+    r["n_images"] = len(results_dic)
+    r["n_dogs_img"] = 0
+    r["n_notdogs_img"] = 0
+    r["n_match"] = 0
+    r["n_correct_dogs"] = 0
+    r["n_correct_notdogs"] = 0
+    r["n_correct_breed"] = 0
+
+    for key, v_list in results_dic.items():
+        if v_list[3] == 1: # label dog
+            r["n_dogs_img"] += 1
+            if v_list[2] == 1: # matched
+                r["n_match"] += 1
+                r["n_correct_breed"] += 1
+            if v_list[4] == 1: # classifier dog
+                r["n_correct_dogs"] += 1
+        else: # label not dog
+            r["n_notdogs_img"] += 1
+            if v_list[2] == 1: # matched
+                r["n_match"] += 1
+            if v_list[4] == 0: # classifier not dog
+                r["n_correct_notdogs"] += 1
+
+    r["pct_match"] = float(r["n_match"] / r["n_images"] * 100)
+    r["pct_correct_dogs"] = float(r["n_correct_dogs"] / r["n_dogs_img"] * 100)
+    r["pct_correct_breed"] = float(r["n_correct_breed"] / r["n_dogs_img"] * 100)
+    r["pct_correct_notdogs"] = (lambda: float(r['n_correct_notdogs'] / r['n_notdogs_img'] * 100.0), lambda: 0.0)[r['n_notdogs_img'] < 0]()
+    results_stats_dic = r
+    return results_stats_dic

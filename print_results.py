@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # */AIPND-revision/intropyproject-classify-pet-images/print_results.py
-#                                                                             
-# PROGRAMMER: 
-# DATE CREATED:
+# 
+# PROGRAMMER: Mike Ajala
+# DATE CREATED: 10/24/2019
 # REVISED DATE: 
 # PURPOSE: Create a function print_results that prints the results statistics
 #          from the results statistics dictionary (results_stats_dic). It 
@@ -23,12 +23,12 @@
 #            -Prints Incorrectly Classified Breeds as print_incorrect_breed within
 #             print_results function and set as either boolean value True or 
 #             False in the function call within main (defaults to False)
-#         This function does not output anything other than printing a summary
+#         This function does not return anything other than printing a summary
 #         of the final results.
 ##
 # TODO 6: Define print_results function below, specifically replace the None
 #       below by the function definition of the print_results function. 
-#       Notice that this function doesn't to return anything because it  
+#       Notice that this function doesn't return anything because it  
 #       prints a summary of the results using results_dic and results_stats_dic
 # 
 def print_results(results_dic, results_stats_dic, model, 
@@ -61,6 +61,32 @@ def print_results(results_dic, results_stats_dic, model,
                               False doesn't print anything(default) (bool) 
     Returns:
            None - simply printing results.
-    """    
+    """
+    # Prints summary statistics over the run
+    print("\n\n*** Results Summary for {} Model Architecture ***".format(model.upper()))
+    print("{:20}: {:3d}".format('N Images', results_stats_dic['n_images']))
+    print("{:20}: {:3d}".format('N Dog Images', results_stats_dic['n_dogs_img']))
+    print("{:20}: {:3d}".format('N Not-Dog Images', results_stats_dic['n_notdogs_img']))
+    print("", "")
+    for k, v in results_stats_dic.items():
+      if k[0] == "p":
+        str_list = k.split('_')[1:]
+        print("{:35}: {:.2f}%".format('Percentage of ' + " ".join(str_list).title(), results_stats_dic[k]))
+
+    if print_incorrect_dogs:
+      if results_stats_dic['n_correct_dogs'] + results_stats_dic['n_correct_notdogs'] != results_stats_dic['n_images']:
+        print("\nINCORRECT Dog/NOT Dog Assignments:")
+        for k, v in results_dic.items():
+          if (v[3] != v[4]):
+            real_animal = (lambda: "Dog", lambda: v[0])[v[3] == 0]()
+            classifier_animal = (lambda: "Dog", lambda: v[1])[v[4] == 0]()
+            print("Real: {:>26}   Classifier: {:>30}".format(real_animal, classifier_animal))
+    
+    if print_incorrect_breed:
+      if results_stats_dic['n_correct_dogs'] != results_stats_dic['n_correct_breed']:
+        print("\nINCORRECT Dog Breed Assignment:")
+        for k, v in results_dic.items():
+          if (sum(v[3:]) == 2 and v[2] == 0):
+              print("Real: {:>26}   Classifier: {:>30}".format(v[0], v[1]))
+
     None
-                
